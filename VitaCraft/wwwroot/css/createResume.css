@@ -1,0 +1,211 @@
+﻿:root {
+    --black: #222;
+    --white: #fff;
+    --gray-light: #f5f5f5;
+    --gray-medium: #ddd;
+    --gray-dark: #777;
+    --primary: #333;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--gray-light);
+    color: var(--black);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.resume-form-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+    .form-header h2 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--black);
+    }
+
+    .form-header p {
+        color: var(--gray-dark);
+        margin-top: 0;
+    }
+
+.animated-form {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: var(--transition);
+}
+
+    .form-section.animate-in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .form-section:nth-child(1) {
+        transition-delay: 0.1s;
+    }
+
+    .form-section:nth-child(2) {
+        transition-delay: 0.2s;
+    }
+
+    .form-section legend {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        color: var(--black);
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--gray-medium);
+    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--black);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--gray-medium);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--black);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.form-check {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+.btn-submit {
+    background-color: var(--black);
+    color: var(--white);
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+}
+
+    .btn-submit:hover {
+        background-color: #111;
+        transform: translateY(-2px);
+    }
+
+.submit-icon {
+    margin-left: 0.5rem;
+    transition: var(--transition);
+}
+
+.btn-submit:hover .submit-icon {
+    transform: translateX(3px);
+}
+
+.text-danger {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resume-form-container {
+        padding: 0 1rem;
+    }
+
+    .animated-form {
+        padding: 1.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-section legend {
+        font-size: 1.1rem;
+    }
+
+    .btn-submit {
+        width: 100%;
+        justify-content: center;
+    }

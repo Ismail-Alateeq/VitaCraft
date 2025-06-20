@@ -1,0 +1,313 @@
+﻿@model VitaCraft.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["PageTitle"] = "Main Dashboard";
+    Layout = "/Views/Shared/AdminLayout.cshtml";
+}
+
+<!-- Quick Action Buttons -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="btn-group" role="group">
+            <a href="/Admin/Users/Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> New User
+            </a>
+            <a href="/Admin/Resumes" class="btn btn-outline-primary">
+                <i class="bi bi-file-earmark-text"></i> Manage Resumes
+            </a>
+            <a href="/Admin/Portfolios" class="btn btn-outline-primary">
+                <i class="bi bi-collection"></i> Manage Portfolios
+            </a>
+            <a href="/Admin/Settings" class="btn btn-outline-secondary">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Statistics Cards -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card shadow-sm">
+            <div class="card-body text-center py-4">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 d-inline-block mb-3">
+                    <i class="bi bi-people fs-2"></i>
+                </div>
+                <h5 class="card-title text-muted">Users</h5>
+                <h2 class="mb-2 fw-bold">@Model.TotalUsers</h2>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar bg-primary" style="width: @(Model.TotalUsers > 0 ? "65%" : "0%")"></div>
+                </div>
+                <p class="small mt-2 mb-0">
+                    <span class="text-@(Model.TotalUsers > 0 ? "success" : "secondary")">
+                        <i class="bi bi-arrow-@(Model.TotalUsers > 0 ? "up" : "right")"></i>
+                        @(Model.TotalUsers > 0 ? "12%" : "0%") from last month
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card shadow-sm">
+            <div class="card-body text-center py-4">
+                <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 d-inline-block mb-3">
+                    <i class="bi bi-file-earmark-person fs-2"></i>
+                </div>
+                <h5 class="card-title text-muted">Resumes</h5>
+                <h2 class="mb-2 fw-bold">@Model.TotalResumes</h2>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar bg-success" style="width: @(Model.TotalResumes > 0 ? "45%" : "0%")"></div>
+                </div>
+                <p class="small mt-2 mb-0">
+                    <span class="text-@(Model.TotalResumes > 0 ? "success" : "secondary")">
+                        <i class="bi bi-arrow-@(Model.TotalResumes > 0 ? "up" : "right")"></i>
+                        @(Model.TotalResumes > 0 ? "8%" : "0%") from last month
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card shadow-sm">
+            <div class="card-body text-center py-4">
+                <div class="bg-info bg-opacity-10 text-info rounded-circle p-3 d-inline-block mb-3">
+                    <i class="bi bi-collection fs-2"></i>
+                </div>
+                <h5 class="card-title text-muted">Portfolios</h5>
+                <h2 class="mb-2 fw-bold">@Model.TotalPortfolios</h2>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar bg-info" style="width: @(Model.TotalPortfolios > 0 ? "35%" : "0%")"></div>
+                </div>
+                <p class="small mt-2 mb-0">
+                    <span class="text-@(Model.TotalPortfolios > 0 ? "success" : "secondary")">
+                        <i class="bi bi-arrow-@(Model.TotalPortfolios > 0 ? "up" : "right")"></i>
+                        @(Model.TotalPortfolios > 0 ? "15%" : "0%") from last month
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card shadow-sm">
+            <div class="card-body text-center py-4">
+                <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-3 d-inline-block mb-3">
+                    <i class="bi bi-layers fs-2"></i>
+                </div>
+                <h5 class="card-title text-muted">Templates</h5>
+                <h2 class="mb-2 fw-bold">@Model.TotalTemplates</h2>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar bg-warning" style="width: 100%"></div>
+                </div>
+                <p class="small mt-2 mb-0">
+                    <span class="text-secondary">
+                        <i class="bi bi-box-seam"></i> Available
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-lg-8">
+        <div class="card admin-card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Usage Overview</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            This Month
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">This Week</a></li>
+                            <li><a class="dropdown-item" href="#">This Month</a></li>
+                            <li><a class="dropdown-item" href="#">This Year</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="usageChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card admin-card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Recent Activities</h5>
+
+                <div class="d-flex border-start border-3 border-primary ps-3 mb-4">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">New User</h6>
+                        <p class="text-muted small mb-0">A new user registered</p>
+                        <small class="text-muted">10 minutes ago</small>
+                    </div>
+                </div>
+
+                <div class="d-flex border-start border-3 border-success ps-3 mb-4">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="bg-success bg-opacity-10 text-success rounded-circle p-2">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">New Resume</h6>
+                        <p class="text-muted small mb-0">A new resume was created</p>
+                        <small class="text-muted">25 minutes ago</small>
+                    </div>
+                </div>
+
+                <div class="d-flex border-start border-3 border-info ps-3">
+                    <div class="flex-shrink-0 me-3">
+                        <div class="bg-info bg-opacity-10 text-info rounded-circle p-2">
+                            <i class="bi bi-collection"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">New Portfolio</h6>
+                        <p class="text-muted small mb-0">A new portfolio was published</p>
+                        <small class="text-muted">2 hours ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card admin-card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Recent Users</h5>
+                    <a href="/Admin/Users" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.LatestUsers)
+                            {
+                                <tr>
+                                    <td>@user.Id.Substring(0, 6).ToUpper()</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle p-2">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">@user.UserName</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        <span class="badge bg-@(user.EmailConfirmed ? "success" : "warning")">
+                                            @(user.EmailConfirmed ? "Active" : "Inactive")
+                                        </span>
+                                    </td>
+                                    <td>@DateTime.Now.AddDays(-new Random().Next(1, 30)).ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="/Admin/UserDetails/@user.Id" class="btn btn-outline-primary" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="/Admin/EditUser/@user.Id" class="btn btn-outline-secondary" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-outline-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            const usageChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    datasets: [
+                        {
+                            label: 'Users',
+                            data: [12, 19, 15, 27, 34, 42, @Model.TotalUsers],
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Resumes',
+                            data: [8, 12, 18, 22, 29, 37, @Model.TotalResumes],
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Portfolios',
+                            data: [5, 9, 12, 15, 21, 28, @Model.TotalPortfolios],
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Enable tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+}

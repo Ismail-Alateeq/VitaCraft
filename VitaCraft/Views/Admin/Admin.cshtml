@@ -1,0 +1,210 @@
+﻿@model VitaCraft.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "لوحة التحكم";
+    ViewData["PageTitle"] = "اللوحة الرئيسية";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<div class="row">
+    <!-- بطاقات الإحصائيات -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card">
+            <div class="card-body text-center">
+                <i class="bi bi-people card-icon"></i>
+                <h5 class="card-title">المستخدمون</h5>
+                <h2 class="mb-0">@Model.TotalUsers</h2>
+                <p class="text-muted small">@(Model.TotalUsers > 0 ? "+" + (Model.TotalUsers * 0.12).ToString("0") + "% عن الشهر الماضي" : "لا توجد بيانات")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-person card-icon"></i>
+                <h5 class="card-title">السير الذاتية</h5>
+                <h2 class="mb-0">@Model.TotalResumes</h2>
+                <p class="text-muted small">@(Model.TotalResumes > 0 ? "+" + (Model.TotalResumes * 0.08).ToString("0") + "% عن الشهر الماضي" : "لا توجد بيانات")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card">
+            <div class="card-body text-center">
+                <i class="bi bi-collection card-icon"></i>
+                <h5 class="card-title">الملفات الشخصية</h5>
+                <h2 class="mb-0">@Model.TotalPortfolios</h2>
+                <p class="text-muted small">@(Model.TotalPortfolios > 0 ? "+" + (Model.TotalPortfolios * 0.15).ToString("0") + "% عن الشهر الماضي" : "لا توجد بيانات")</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card admin-card">
+            <div class="card-body text-center">
+                <i class="bi bi-layers card-icon"></i>
+                <h5 class="card-title">القوالب</h5>
+                <h2 class="mb-0">@Model.TotalTemplates</h2>
+                <p class="text-muted small">@Model.TotalTemplates قوالب متاحة</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-lg-8">
+        <div class="card admin-card">
+            <div class="card-body">
+                <h5 class="card-title">ملخص الاستخدام</h5>
+                <div class="chart-container" style="position: relative; height:300px;">
+                    <canvas id="usageChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card admin-card">
+            <div class="card-body">
+                <h5 class="card-title">حالة النظام</h5>
+
+                <div class="mb-4">
+                    <div class="alert alert-success small p-2 mb-2">
+                        <i class="bi bi-check-circle me-1"></i> جميع الأنظمة تعمل بشكل طبيعي
+                    </div>
+                    <div class="alert alert-info small p-2">
+                        <i class="bi bi-info-circle me-1"></i> لديك @Model.TotalUsers مستخدم نشط
+                    </div>
+                </div>
+
+                <div>
+                    <h6>توزيع المستخدمين</h6>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">@((Model.TotalUsers > 0 ? 65 : 0))%</h6>
+                            <small class="text-muted">نشطون هذا الشهر</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2">
+                                <i class="bi bi-person-dash"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">@((Model.TotalUsers > 0 ? 35 : 0))%</h6>
+                            <small class="text-muted">غير نشطين</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card admin-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">أحدث المستخدمين المسجلين</h5>
+                    <a href="/Admin/Users" class="btn btn-sm btn-outline-primary">عرض الكل</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.LatestUsers)
+                            {
+                                <tr>
+                                    <td>@user.Id.Substring(0, 6)</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.EmailConfirmed</td>
+                                    <td>
+                                        <span class="badge bg-@(user.EmailConfirmed ? "success" : "warning")">
+                                            @(user.EmailConfirmed ? "مفعل" : "بانتظار التفعيل")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="/Admin/UserDetails/@user.Id" class="btn btn-sm btn-outline-primary" title="عرض">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="/Admin/EditUser/@user.Id" class="btn btn-sm btn-outline-secondary" title="تعديل">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // الرسم البياني
+        const ctx = document.getElementById('usageChart').getContext('2d');
+        const usageChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['المستخدمون', 'السير الذاتية', 'الملفات الشخصية', 'القوالب'],
+                datasets: [{
+                    label: 'الإحصائيات',
+                    data: [@Model.TotalUsers, @Model.TotalResumes, @Model.TotalPortfolios, @Model.TotalTemplates],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // تفعيل أدوات التلميح
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    </script>
+}

@@ -1,0 +1,160 @@
+﻿    @page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!-- Section: Design Block -->
+<section class="">
+    <!-- Jumbotron -->
+    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+        <div class="container">
+            <div class="row gx-lg-5 align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="my-5 display-3 fw-bold ls-tight">
+                        Welcome to <br />
+                        <span class="text-primary">VitaCraft</span>
+                    </h1>
+                    <p style="color: hsl(217, 10%, 50.8%)">
+                        Build your professional portfolio with our AI-powered tools.
+                        Showcase your skills, projects, and experience in a modern way.
+                    </p>
+                </div>
+
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="card">
+                        <div class="card-body py-5 px-md-5">
+                            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                                <!-- 2 column grid layout with text inputs for the first and last names -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input asp-for="Input.firstName" class="form-control" autocomplete="given-name" />
+                                            <label class="form-label" asp-for="Input.firstName">First name</label>
+                                        </div>
+                                        <span asp-validation-for="Input.firstName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input asp-for="Input.lastName" class="form-control" autocomplete="family-name" />
+                                            <label class="form-label" asp-for="Input.lastName">Last name</label>
+                                        </div>
+                                        <span asp-validation-for="Input.lastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Email input -->
+                                <div class="form-outline mb-4">
+                                    <input asp-for="Input.Email" class="form-control" autocomplete="username" />
+                                    <label class="form-label" asp-for="Input.Email">Email address</label>
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
+
+                                <!-- Password input -->
+                                <div class="form-outline mb-4">
+                                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" />
+                                    <label class="form-label" asp-for="Input.Password">Password</label>
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+
+                                <!-- Confirm Password input -->
+                                <div class="form-outline mb-4">
+                                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" />
+                                    <label class="form-label" asp-for="Input.ConfirmPassword">Confirm Password</label>
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                </div>
+
+                                <!-- Checkbox -->
+                                <div class="form-check d-flex justify-content-center mb-4">
+                                    <input class="form-check-input me-2" type="checkbox" id="termsCheck" required />
+                                    <label class="form-check-label" for="termsCheck">
+                                        I agree to the <a href="#">Terms and Conditions</a>
+                                    </label>
+                                </div>
+
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary btn-block mb-4">
+                                    Sign up
+                                </button>
+
+                                <!-- Register buttons -->
+                                <div class="text-center">
+                                    <p>or sign up with:</p>
+                                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                                    {
+                                        @foreach (var provider in Model.ExternalLogins!)
+                                        {
+                                            <button type="submit" class="btn btn-link btn-floating mx-1" name="provider" value="@provider.Name" title="Register using your @provider.DisplayName account">
+                                                <i class="fab fa-@provider.DisplayName.ToLower()"></i>
+                                            </button>
+                                        }
+                                    }
+                                </div>
+
+                                <div class="text-center mt-3">
+                                    <p>Already have an account? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Login</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Jumbotron -->
+</section>
+<!-- Section: Design Block -->
+@section Styles {
+    <style>
+        .form-outline {
+            position: relative;
+        }
+
+            .form-outline input {
+                padding: 10px;
+            }
+
+            .form-outline label {
+                position: absolute;
+                top: -10px;
+                left: 10px;
+                background: white;
+                padding: 0 5px;
+                font-size: 0.85rem;
+            }
+
+        .btn-link {
+            color: #3b71ca;
+            font-size: 1.25rem;
+        }
+
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+    </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Initialize form labels
+        document.querySelectorAll('.form-outline input').forEach(input => {
+            if (input.value) {
+                input.previousElementSibling.classList.add('active');
+            }
+
+            input.addEventListener('focus', function() {
+                this.previousElementSibling.classList.add('active');
+            });
+
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.previousElementSibling.classList.remove('active');
+                }
+            });
+        });
+    </script>
+}

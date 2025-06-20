@@ -1,0 +1,391 @@
+﻿@model VitaCraft.Models.DTOs.PortFolioDTO
+
+@{
+    ViewData["Title"] = "Create Portfolio";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Create New Portfolio</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" asp-controller="PortFolio" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- Personal Information Section -->
+                <div class="section mb-4">
+                    <h4 class="section-title">Personal Information</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="FirstName" class="form-label"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="LastName" class="form-label"></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Phone" class="form-label"></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Title" class="form-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Address" class="form-label"></label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Social Media Section -->
+                <div class="section mb-4">
+                    <h4 class="section-title">Social Media</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="LinkedIn" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                                    <input asp-for="LinkedIn" class="form-control" placeholder="https://linkedin.com/in/username" />
+                                </div>
+                                <span asp-validation-for="LinkedIn" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="GitHub" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-github"></i></span>
+                                    <input asp-for="GitHub" class="form-control" placeholder="https://github.com/username" />
+                                </div>
+                                <span asp-validation-for="GitHub" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Image Section -->
+                <div class="section mb-4">
+                    <h4 class="section-title">Profile Image</h4>
+                    <div class="form-group">
+                        <label asp-for="ProfileImage" class="form-label"></label>
+                        <div class="custom-file">
+                            <input type="file" asp-for="ProfileImage" class="custom-file-input" id="profileImageInput">
+                            <label class="custom-file-label" for="profileImageInput">Choose file</label>
+                        </div>
+                        <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- About Me Section -->
+                <div class="section mb-4">
+                    <h4 class="section-title">About Me</h4>
+                    <div class="form-group">
+                        <label asp-for="Summary" class="form-label"></label>
+                        <textarea asp-for="Summary" class="form-control" rows="5" placeholder="Tell us about yourself..."></textarea>
+                        <span asp-validation-for="Summary" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Services & Skills Section -->
+                <div class="section mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="section-title">Services</h4>
+                            <div class="form-group">
+                                <textarea asp-for="Services" class="form-control" rows="3" placeholder="List your services (comma separated)"></textarea>
+                                <span asp-validation-for="Services" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="section-title">Skills</h4>
+                            <div class="form-group">
+                                <textarea asp-for="Skills" class="form-control" rows="3" placeholder="List your skills (comma separated)"></textarea>
+                                <span asp-validation-for="Skills" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Section -->
+                <div class="section mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="section-title mb-0">Projects</h4>
+                        <div>
+                            <button type="button" id="add-multiple-projects" class="btn btn-info mr-2">
+                                <i class="fas fa-layer-group"></i> Add Multiple
+                            </button>
+                            <button type="button" id="add-single-project" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Add Single
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Multiple Projects Modal -->
+                    <div class="modal fade" id="multipleProjectsModal" tabindex="-1" role="dialog" aria-labelledby="multipleProjectsModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="multipleProjectsModalLabel">Add Multiple Projects</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="projectsCount">Number of Projects to Add</label>
+                                        <input type="number" id="projectsCount" class="form-control" min="1" max="10" value="1">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" id="confirm-add-multiple" class="btn btn-primary">Add Projects</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="projects-container">
+                        @for (int i = 0; i < Model.Projects.Count; i++)
+                        {
+                            <div class="project-item card mb-3">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Project #<span class="project-number">@(i + 1)</span></h5>
+                                    <button type="button" class="btn btn-sm btn-danger remove-project">
+                                        <i class="fas fa-times"></i> Remove
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label asp-for="Projects[i].Name" class="form-label">Project Name</label>
+                                        <input asp-for="Projects[i].Name" class="form-control" placeholder="Enter project name" />
+                                        <span asp-validation-for="Projects[i].Name" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Projects[i].Description" class="form-label">Description</label>
+                                        <textarea asp-for="Projects[i].Description" class="form-control" rows="3" placeholder="Describe your project..."></textarea>
+                                        <span asp-validation-for="Projects[i].Description" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Projects[i].Image" class="form-label">Project Image</label>
+                                        <div class="custom-file">
+                                            <input type="file" asp-for="Projects[i].Image" class="custom-file-input" id="projectImageInput-@i">
+                                            <label class="custom-file-label" for="projectImageInput-@i">Choose file</label>
+                                        </div>
+                                        <span asp-validation-for="Projects[i].Image" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Projects[i].Link" class="form-label">Project Link</label>
+                                        <input asp-for="Projects[i].Link" class="form-control" placeholder="https://example.com" />
+                                        <span asp-validation-for="Projects[i].Link" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Create Portfolio
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg ml-2">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+
+        .section-title {
+            color: #007bff;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .card-header {
+            font-weight: 600;
+        }
+
+        .custom-file-label::after {
+            content: "Browse";
+        }
+
+        .project-number {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .modal-backdrop {
+            z-index: 1040 !important;
+        }
+
+        .modal {
+            z-index: 1050 !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <!-- jQuery first, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize file inputs
+            function initFileInputs() {
+                $('.custom-file-input').off('change').on('change', function() {
+                    var fileName = $(this).val().split('\\').pop();
+                    $(this).next('.custom-file-label').html(fileName || 'Choose file');
+                });
+            }
+
+            // Initialize on page load
+            initFileInputs();
+
+            // Show multiple projects modal
+            $("#add-multiple-projects").click(function() {
+                $("#projectsCount").val(1); // Reset to default value
+                $("#multipleProjectsModal").modal('show');
+            });
+
+            // Add multiple projects
+            $("#confirm-add-multiple").click(function() {
+                var count = parseInt($("#projectsCount").val());
+                if (count > 0 && count <= 10) {
+                    for (var i = 0; i < count; i++) {
+                        addProject();
+                    }
+                    $("#multipleProjectsModal").modal('hide');
+                } else {
+                    alert("Please enter a number between 1 and 10");
+                }
+            });
+
+            // Add single project
+            $("#add-single-project").click(addProject);
+
+            // Add new project function
+            function addProject() {
+                var index = $(".project-item").length;
+                var html = `
+                    <div class="project-item card mb-3">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Project #<span class="project-number">${index + 1}</span></h5>
+                            <button type="button" class="btn btn-sm btn-danger remove-project">
+                                <i class="fas fa-times"></i> Remove
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="Projects_${index}__Name" class="form-label">Project Name</label>
+                                <input type="text" id="Projects_${index}__Name" name="Projects[${index}].Name" class="form-control" placeholder="Enter project name" />
+                                <span class="text-danger field-validation-valid" data-valmsg-for="Projects[${index}].Name" data-valmsg-replace="true"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Projects_${index}__Description" class="form-label">Description</label>
+                                <textarea id="Projects_${index}__Description" name="Projects[${index}].Description" class="form-control" rows="3" placeholder="Describe your project..."></textarea>
+                                <span class="text-danger field-validation-valid" data-valmsg-for="Projects[${index}].Description" data-valmsg-replace="true"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Projects_${index}__Image" class="form-label">Project Image</label>
+                                <div class="custom-file">
+                                    <input type="file" id="Projects_${index}__Image" name="Projects[${index}].Image" class="custom-file-input" id="projectImageInput-${index}">
+                                    <label class="custom-file-label" for="projectImageInput-${index}">Choose file</label>
+                                </div>
+                                <span class="text-danger field-validation-valid" data-valmsg-for="Projects[${index}].Image" data-valmsg-replace="true"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Projects_${index}__Link" class="form-label">Project Link</label>
+                                <input type="text" id="Projects_${index}__Link" name="Projects[${index}].Link" class="form-control" placeholder="https://example.com" />
+                                <span class="text-danger field-validation-valid" data-valmsg-for="Projects[${index}].Link" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                    </div>`;
+
+                $("#projects-container").append(html);
+                initFileInputs();
+
+                // Scroll to the newly added project
+                $('html, body').animate({
+                    scrollTop: $(".project-item").last().offset().top - 100
+                }, 500);
+            }
+
+            // Remove project
+            $(document).on("click", ".remove-project", function () {
+                $(this).closest(".project-item").remove();
+                reindexProjects();
+            });
+
+            // Reindex projects
+            function reindexProjects() {
+                $(".project-item").each(function (index) {
+                    $(this).find(".project-number").text(index + 1);
+
+                    $(this).find("input, textarea, select, label, span").each(function () {
+                        var $this = $(this);
+                        if ($this.attr("id")) {
+                            $this.attr("id", $this.attr("id").replace(/Projects_\d+__/, `Projects_${index}__`));
+                        }
+                        if ($this.attr("name")) {
+                            $this.attr("name", $this.attr("name").replace(/Projects\[\d+\]/, `Projects[${index}]`));
+                        }
+                        if ($this.attr("data-valmsg-for")) {
+                            $this.attr("data-valmsg-for", $this.attr("data-valmsg-for").replace(/Projects\[\d+\]/, `Projects[${index}]`));
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+}

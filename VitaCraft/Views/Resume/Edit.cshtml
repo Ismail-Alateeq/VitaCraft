@@ -1,0 +1,473 @@
+﻿@model VitaCraft.Models.DTOs.ResumeJsonDto
+
+@{
+    ViewData["Title"] = "Edit Resume";
+}
+
+<link rel="stylesheet" href="~/css/createResume.css" asp-append-version="true" />
+
+<div class="resume-form-container">
+    <div class="form-header">
+        <h2>Edit Your Resume</h2>
+        <p>Update your details to maintain a professional resume</p>
+    </div>
+
+    <form asp-action="Edit" method="post" class="animated-form">
+        <input type="hidden" asp-for="resumeId" />
+        <input type="hidden" asp-for="EndUserId" />
+        <input type="hidden" asp-for="CreatedDate" />
+
+        <!-- Personal Information -->
+        <fieldset class="form-section">
+            <legend>Personal Information</legend>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" required />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" required />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="form-label">Phone</label>
+                    <input asp-for="PhoneNumber" class="form-control" required />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LinkedinLink" class="form-label">LinkedIn</label>
+                    <input asp-for="LinkedinLink" class="form-control" placeholder="https://linkedin.com/in/yourprofile" />
+                    <span asp-validation-for="LinkedinLink" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GitHubLink" class="form-label">GitHub</label>
+                    <input asp-for="GitHubLink" class="form-control" placeholder="https://github.com/yourusername" />
+                    <span asp-validation-for="GitHubLink" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Summary" class="form-label">Professional Summary</label>
+                <textarea asp-for="Summary" class="form-control" rows="4"
+                          placeholder="Brief professional summary (3-5 sentences)..." required></textarea>
+                <span asp-validation-for="Summary" class="text-danger"></span>
+            </div>
+        </fieldset>
+
+        <!-- Education Section -->
+        <fieldset class="form-section">
+            <legend>Education</legend>
+            <div id="education-container">
+                @if (Model.Educations != null)
+                {
+                    for (int i = 0; i < Model.Educations.Count; i++)
+                    {
+                        <div class="education-item card mb-3 p-3">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label asp-for="Educations[i].CollegeName" class="form-label">Institution</label>
+                                    <input asp-for="Educations[i].CollegeName" class="form-control" required />
+                                    <span asp-validation-for="Educations[i].CollegeName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Educations[i].DegreeType" class="form-label">Degree</label>
+                                    <input asp-for="Educations[i].DegreeType" class="form-control" required />
+                                    <span asp-validation-for="Educations[i].DegreeType" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Educations[i].Major" class="form-label">Major</label>
+                                    <input asp-for="Educations[i].Major" class="form-control" required />
+                                    <span asp-validation-for="Educations[i].Major" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Educations[i].StartDate" class="form-label">Start Date</label>
+                                    <input asp-for="Educations[i].StartDate" type="date" class="form-control" required />
+                                    <span asp-validation-for="Educations[i].StartDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Educations[i].EndDate" class="form-label">End Date</label>
+                                    <input asp-for="Educations[i].EndDate" type="date" class="form-control" required />
+                                    <span asp-validation-for="Educations[i].EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeEducation(this)">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addEducation()">
+                <i class="fas fa-plus"></i> Add Education
+            </button>
+        </fieldset>
+
+        <!-- Experience Section -->
+        <fieldset class="form-section">
+            <legend>Work Experience</legend>
+            <div id="experience-container">
+                @if (Model.Experiences != null)
+                {
+                    for (int i = 0; i < Model.Experiences.Count; i++)
+                    {
+                        <div class="experience-item card mb-3 p-3">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label asp-for="Experiences[i].Title" class="form-label">Job Title</label>
+                                    <input asp-for="Experiences[i].Title" class="form-control" required />
+                                    <span asp-validation-for="Experiences[i].Title" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Experiences[i].Company" class="form-label">Company</label>
+                                    <input asp-for="Experiences[i].Company" class="form-control" required />
+                                    <span asp-validation-for="Experiences[i].Company" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Experiences[i].StartDate" class="form-label">Start Date</label>
+                                    <input asp-for="Experiences[i].StartDate" type="date" class="form-control" required />
+                                    <span asp-validation-for="Experiences[i].StartDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Experiences[i].EndDate" class="form-label">End Date</label>
+                                    <input asp-for="Experiences[i].EndDate" type="date" class="form-control" />
+                                    <span asp-validation-for="Experiences[i].EndDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group form-check">
+                                    <input asp-for="Experiences[i].IsCurrent" class="form-check-input" />
+                                    <label asp-for="Experiences[i].IsCurrent" class="form-check-label">Current Job</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Experiences[i].Duties" class="form-label">Responsibilities</label>
+                                <textarea asp-for="Experiences[i].Duties" class="form-control" rows="3" required></textarea>
+                                <span asp-validation-for="Experiences[i].Duties" class="text-danger"></span>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeExperience(this)">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addExperience()">
+                <i class="fas fa-plus"></i> Add Experience
+            </button>
+        </fieldset>
+
+        <!-- Skills Section -->
+        <fieldset class="form-section">
+            <legend>Skills</legend>
+            <div id="skill-container">
+                @if (Model.Skills != null)
+                {
+                    for (int i = 0; i < Model.Skills.Count; i++)
+                    {
+                        <div class="skill-item card mb-3 p-3">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label asp-for="Skills[i].SkillName" class="form-label">Skill Name</label>
+                                    <input asp-for="Skills[i].SkillName" class="form-control" required />
+                                    <span asp-validation-for="Skills[i].SkillName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Skills[i].SkillType" class="form-label">Skill Type</label>
+                                    <select asp-for="Skills[i].SkillType" class="form-control" required>
+                                        <option value="Technical">Technical</option>
+                                        <option value="Soft">Soft</option>
+                                        <option value="Language">Language</option>
+                                    </select>
+                                    <span asp-validation-for="Skills[i].SkillType" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeSkill(this)">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addSkill()">
+                <i class="fas fa-plus"></i> Add Skill
+            </button>
+        </fieldset>
+
+        <!-- Certificates Section -->
+        <fieldset class="form-section">
+            <legend>Certifications</legend>
+            <div id="certificate-container">
+                @if (Model.Certificates != null)
+                {
+                    for (int i = 0; i < Model.Certificates.Count; i++)
+                    {
+                        <div class="certificate-item card mb-3 p-3">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label asp-for="Certificates[i].Title" class="form-label">Certificate Title</label>
+                                    <input asp-for="Certificates[i].Title" class="form-control" required />
+                                    <span asp-validation-for="Certificates[i].Title" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Certificates[i].ProviderName" class="form-label">Issuing Organization</label>
+                                    <input asp-for="Certificates[i].ProviderName" class="form-control" required />
+                                    <span asp-validation-for="Certificates[i].ProviderName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Certificates[i].StartDate" class="form-label">Issue Date</label>
+                                    <input asp-for="Certificates[i].StartDate" type="date" class="form-control" required />
+                                    <span asp-validation-for="Certificates[i].StartDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Certificates[i].EndDate" class="form-label">Expiration Date</label>
+                                    <input asp-for="Certificates[i].EndDate" type="date" class="form-control" />
+                                    <span asp-validation-for="Certificates[i].EndDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Certificates[i].Field" class="form-label">Field</label>
+                                    <input asp-for="Certificates[i].Field" class="form-control" required />
+                                    <span asp-validation-for="Certificates[i].Field" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeCertificate(this)">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addCertificate()">
+                <i class="fas fa-plus"></i> Add Certificate
+            </button>
+        </fieldset>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+            <button type="submit" class="btn-submit" name="command" value="submit">
+                Save Changes
+                <span class="submit-icon">→</span>
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Education
+        function addEducation() {
+            const container = document.getElementById('education-container');
+            const index = container.children.length;
+
+            const html = `
+                <div class="education-item card mb-3 p-3">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Institution</label>
+                            <input name="Educations[${index}].CollegeName" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Degree</label>
+                            <input name="Educations[${index}].DegreeType" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Major</label>
+                            <input name="Educations[${index}].Major" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <input name="Educations[${index}].StartDate" type="date" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Date</label>
+                            <input name="Educations[${index}].EndDate" type="date" class="form-control" required />
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeEducation(this)">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeEducation(button) {
+            const item = button.closest('.education-item');
+            item.remove();
+            reindexItems('education-container', 'Educations');
+        }
+
+        // Experience
+        function addExperience() {
+            const container = document.getElementById('experience-container');
+            const index = container.children.length;
+
+            const html = `
+                <div class="experience-item card mb-3 p-3">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Job Title</label>
+                            <input name="Experiences[${index}].Title" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Company</label>
+                            <input name="Experiences[${index}].Company" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Start Date</label>
+                            <input name="Experiences[${index}].StartDate" type="date" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Date</label>
+                            <input name="Experiences[${index}].EndDate" type="date" class="form-control" />
+                        </div>
+                        <div class="form-group form-check">
+                            <input name="Experiences[${index}].IsCurrent" type="checkbox" class="form-check-input" />
+                            <label class="form-check-label">Current Job</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Responsibilities</label>
+                        <textarea name="Experiences[${index}].Duties" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeExperience(this)">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeExperience(button) {
+            const item = button.closest('.experience-item');
+            item.remove();
+            reindexItems('experience-container', 'Experiences');
+        }
+
+        // Skills
+        function addSkill() {
+            const container = document.getElementById('skill-container');
+            const index = container.children.length;
+
+            const html = `
+                <div class="skill-item card mb-3 p-3">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Skill Name</label>
+                            <input name="Skills[${index}].SkillName" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Skill Type</label>
+                            <select name="Skills[${index}].SkillType" class="form-control" required>
+                                <option value="Technical">Technical</option>
+                                <option value="Soft">Soft</option>
+                                <option value="Language">Language</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeSkill(this)">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeSkill(button) {
+            const item = button.closest('.skill-item');
+            item.remove();
+            reindexItems('skill-container', 'Skills');
+        }
+
+        // Certificates
+        function addCertificate() {
+            const container = document.getElementById('certificate-container');
+            const index = container.children.length;
+
+            const html = `
+                <div class="certificate-item card mb-3 p-3">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Certificate Title</label>
+                            <input name="Certificates[${index}].Title" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Issuing Organization</label>
+                            <input name="Certificates[${index}].ProviderName" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Issue Date</label>
+                            <input name="Certificates[${index}].StartDate" type="date" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expiration Date</label>
+                            <input name="Certificates[${index}].EndDate" type="date" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Field</label>
+                            <input name="Certificates[${index}].Field" class="form-control" required />
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeCertificate(this)">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeCertificate(button) {
+            const item = button.closest('.certificate-item');
+            item.remove();
+            reindexItems('certificate-container', 'Certificates');
+        }
+
+        // Reindex all items in a container
+        function reindexItems(containerId, prefix) {
+            const container = document.getElementById(containerId);
+            const items = container.getElementsByClassName(prefix.toLowerCase() + '-item');
+
+            Array.from(items).forEach((item, index) => {
+                // Update all input names
+                const inputs = item.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    const name = input.getAttribute('name');
+                    if (name) {
+                        input.setAttribute('name', name.replace(
+                            new RegExp(`${prefix}\\[\\d+\\]`),
+                            `${prefix}[${index}]`
+                        ));
+                    }
+                });
+            });
+        }
+
+        // Animation on scroll
+        document.addEventListener('DOMContentLoaded', function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            document.querySelectorAll('.form-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+}

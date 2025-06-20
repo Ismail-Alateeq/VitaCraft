@@ -1,0 +1,31 @@
+﻿@* @model VitaCraft.Models.DTOs.ResumeDTO
+
+@{
+    ViewData["Title"] = "Resume Details";
+}
+
+<h2>Resume Details</h2>
+
+<div class="row">
+    <div class="col-md-6"><strong>Title:</strong> @Model.title</div>
+    <div class="col-md-6"><strong>Name:</strong> @($"{Model.firstName} {Model.secondName} {Model.thirdName} {Model.lastName}")</div>
+    <div class="col-md-6"><strong>Email:</strong> @Model.email</div>
+    <div class="col-md-6"><strong>Phone:</strong> @Model.phoneNumber</div>
+    <div class="col-md-6"><strong>LinkedIn:</strong> @Model.linkedIn</div>
+    <div class="col-md-6"><strong>GitHub:</strong> @Model.gitHub</div>
+    <div class="col-md-6"><strong>Facebook:</strong> @Model.link3</div>
+    <div class="col-md-6"><strong>Address:</strong> @Model.address</div>
+    <div class="col-md-6"><strong>Date of Birth:</strong> @Model.dateOfBirth.ToShortDateString()</div>
+    <div class="col-md-12"><strong>Bio:</strong> <p>@Model.bio</p></div>
+    <div class="col-md-12"><strong>Education:</strong> <p>@Model.educations</p></div>
+    <div class="col-md-12"><strong>Experience:</strong> <p>@Model.experiences</p></div>
+    <div class="col-md-12"><strong>Skill:</strong> <p>@Model.skills</p></div>
+    <div class="col-md-12"><strong>Language:</strong> <p>@Model.languages</p></div>
+    <div class="col-md-12"><strong>Certificate:</strong> <p>@Model.certificates</p></div>
+
+</div>
+
+<br />
+<a asp-action="Edit" asp-route-id="@Model.resumeId" class="btn btn-warning">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+ *@

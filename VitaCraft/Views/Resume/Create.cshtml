@@ -1,0 +1,187 @@
+﻿@model VitaCraft.Models.DTOs.ResumeDTO
+
+@{
+    ViewData["Title"] = "Generated Resume";
+}
+
+<link rel="stylesheet" href="~/css/createResume.css" asp-append-version="true" />
+
+<div class="resume-form-container">
+    <div class="form-header">
+        <h2>Create Your Resume</h2>
+        <p>Fill in your details to generate a professional resume</p>
+    </div>
+
+    <form id="resumeForm" asp-action="ProcessStep" method="post" class="animated-form">
+        <!-- Personal Information -->
+        <fieldset class="form-section">
+            <legend>Personal Information</legend>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" required />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" required />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="form-label"></label>
+                    <input asp-for="Phone" class="form-control" required />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LinkedinLink" class="form-label"></label>
+                    <input asp-for="LinkedinLink" class="form-control" placeholder="https://linkedin.com/in/yourprofile" />
+                    <span asp-validation-for="LinkedinLink" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GitHubLink" class="form-label"></label>
+                    <input asp-for="GitHubLink" class="form-control" placeholder="https://github.com/yourusername" />
+                    <span asp-validation-for="GitHubLink" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="bio" class="form-label"></label>
+                <textarea asp-for="bio" class="form-control" rows="4"
+                          placeholder="Brief professional summary (3-5 sentences)..." required></textarea>
+                <span asp-validation-for="bio" class="text-danger"></span>
+            </div>
+        </fieldset>
+
+        <!-- Professional Details -->
+        <fieldset class="form-section">
+            <legend>Professional Details</legend>
+            <div class="form-group">
+                <label asp-for="Education" class="form-label"></label>
+                <textarea asp-for="Education" class="form-control" rows="4"
+                          placeholder="List your educational background (degree, institution, year)..." required></textarea>
+                <span asp-validation-for="Education" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Experience" class="form-label"></label>
+                <textarea asp-for="Experience" class="form-control" rows="4"
+                          placeholder="List your work experience (position, company, duration, key achievements)..." required></textarea>
+                <span asp-validation-for="Experience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Skills" class="form-label"></label>
+                <textarea asp-for="Skills" class="form-control" rows="4"
+                          placeholder="List your key skills (technical, soft skills)..." required></textarea>
+                <span asp-validation-for="Skills" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Certificates" class="form-label"></label>
+                <textarea asp-for="Certificates" class="form-control" rows="4"
+                          placeholder="List your certifications..." required></textarea>
+                <span asp-validation-for="Certificates" class="text-danger"></span>
+            </div>
+        </fieldset>
+
+        <!-- Consent & Submit -->
+        <div class="form-actions">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="consentCheckbox" required>
+                <label class="form-check-label" for="consentCheckbox">
+                    I consent to processing my information by the AI system for resume enhancement.
+                </label>
+            </div>
+            <button type="submit" class="btn-submit" name="command" value="submit">
+                Generate Resume
+                <span class="submit-icon">→</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add animation class when elements come into view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            document.querySelectorAll('.form-section').forEach(section => {
+                observer.observe(section);
+            });
+
+            // Language management
+            const languageContainer = document.getElementById('languageContainer');
+            const addLanguageBtn = document.getElementById('addLanguage');
+
+            addLanguageBtn.addEventListener('click', function() {
+                const index = document.querySelectorAll('.language-skill').length;
+                const newLanguage = document.createElement('div');
+                newLanguage.className = 'language-skill mb-3';
+                newLanguage.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-5">
+                            <select name="Languages[${index}].Name" class="form-control" required>
+                                <option value="">Select a language...</option>
+                                <option value="Arabic">Arabic</option>
+                                <option value="English">English</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="Chinese">Chinese</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <select name="Languages[${index}].Proficiency" class="form-control" required>
+                                <option value="">Proficiency level...</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Fluent">Fluent</option>
+                                <option value="Native">Native</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm remove-language">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                languageContainer.appendChild(newLanguage);
+                updateRemoveButtons();
+            });
+
+            function updateRemoveButtons() {
+                const removeButtons = document.querySelectorAll('.remove-language');
+                removeButtons.forEach((btn, index) => {
+                    btn.disabled = index === 0;
+                    btn.addEventListener('click', function() {
+                        if (!this.disabled) {
+                            this.closest('.language-skill').remove();
+                            // Reindex remaining language fields
+                            document.querySelectorAll('.language-skill').forEach((skill, i) => {
+                                skill.querySelector('select[name$="].Name"]').name = `Languages[${i}].Name`;
+                                skill.querySelector('select[name$="].Proficiency"]').name = `Languages[${i}].Proficiency`;
+                            });
+                            updateRemoveButtons();
+                        }
+                    });
+                });
+            }
+
+            // Initialize remove buttons
+            updateRemoveButtons();
+        });
+    </script>
+}
