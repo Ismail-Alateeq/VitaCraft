@@ -130,6 +130,7 @@ namespace VitaCraft.Areas.Identity.Pages.Account
                 user.lastName = Input.lastName;
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.EmailConfirmed =true;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -150,7 +151,7 @@ namespace VitaCraft.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("Login", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {

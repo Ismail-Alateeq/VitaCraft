@@ -9,8 +9,8 @@
                     <h2 data-aos="fade-up" data-aos-delay="400">Create your professional Portfolio & Resume in minutes</h2>
                     <div data-aos="fade-up" data-aos-delay="600">
                         <div class="d-flex gap-3 mt-4">
-                            <a href="https://localhost:7119/Resume/Index" class="btn btn-primary btn-lg">Build Your Resume</a>
-                            <a href="https://localhost:7119/PortFolio/Index" class="btn btn-outline-light btn-lg">Create Portfolio</a>
+                            <a asp-action="Index" asp-controller="Resume" class="btn btn-primary btn-lg">Build Your Resume</a>
+                            <a asp-action="Index" asp-controller="PortFolio" class="btn btn-outline-light btn-lg">Build Your Portfolio</a>
                         </div>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
                                 <i class="bi bi-quote quote-icon-right"></i>
                             </p>
                             <img src="~/assets/img/testimonials/testimonial-1.jpg" class="testimonial-img" alt="">
-                            <h3>Sarah Johnson</h3>
+                            <h3>Ehab N Hasanat</h3>
                             <h4>Graphic Designer</h4>
                         </div>
                     </div><!-- End testimonial item -->
@@ -173,20 +173,7 @@
             </div>
         </div>
     </section><!-- End Testimonials -->
-    <!-- Call to Action -->
-    <section id="cta" class="cta" style="background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);">
-        <div class="container" data-aos="fade-up">
-            <div class="row">
-                <div class="col-lg-9 text-center text-lg-start">
-                    <h3>Ready to Build Your Professional Profile?</h3>
-                    <p>Join thousands of professionals who got better opportunities with VitaCraft.</p>
-                </div>
-                <div class="col-lg-3 cta-btn-container text-center">
-                    <a class="cta-btn align-middle" href="~/" style="background-color: #fff; color: #2c3e50;">Get Started Now</a>
-                </div>
-            </div>
-        </div>
-    </section><!-- End CTA -->
+    <!-- End CTA -->
 
 </main>
 

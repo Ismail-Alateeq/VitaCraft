@@ -1,277 +1,130 @@
-﻿@model List<VitaCraft.Models.DTOs.ResumeJsonDto>
+﻿@model IEnumerable<VitaCraft.Models.DTOs.ResumeJsonDto>
 @{
-    ViewData["Title"] = "My Resumes";
+    ViewData["Title"] = "My Resume";
+
+   
+    var userName = User.Identity?.Name ?? "Guest";
+    var lastUpdated = Model.Any() ? Model.Max(p => p.ModifiedDate)?.ToString() : "Never";
 }
 
-<div class="container py-4">
-    <!-- Hero Section -->
-    <div class="hero-section bg-gradient-primary text-white p-5 rounded-4 mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1 class="display-4 fw-bold mb-3">Welcome back, <span class="text-warning">@User.Identity.Name</span></h1>
-                <p class="lead mb-4">You have <strong>@Model.Count</strong> resume@(Model.Count != 1 ? "s" : "") ready to customize and share</p>
-                <a href="/Resume/Create" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm">
-                    <i class="bi bi-plus-circle me-2"></i> Create New Resume
-                </a>
-            </div>
-            <div class="col-md-4 d-none d-md-block text-center">
-                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%253D%253D&auto=format&fit=crop&w=1470&q=80" alt="Resume Illustration" class="img-fluid" style="max-height: 160px;">
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Stats -->
-    <div class="row mb-4 g-3">
-        <div class="col-md-4">
-            <div class="stat-card bg-white p-4 rounded-3 shadow-sm h-100 border-start border-4 border-primary">
-                <div class="d-flex align-items-center">
-                    <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3 me-3">
-                        <i class="bi bi-files fs-3"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-0 text-muted">Total Resumes</h6>
-                        <h3 class="mb-0 fw-bold">@Model.Count</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-card bg-white p-4 rounded-3 shadow-sm h-100 border-start border-4 border-success">
-                <div class="d-flex align-items-center">
-                    <div class="stat-icon bg-success bg-opacity-10 text-success rounded-3 p-3 me-3">
-                        <i class="bi bi-check-circle fs-3"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-0 text-muted">Optimized</h6>
-                        <h3 class="mb-0 fw-bold">@(Model.Count > 0 ? "1" : "0")</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-card bg-white p-4 rounded-3 shadow-sm h-100 border-start border-4 border-info">
-                <div class="d-flex align-items-center">
-                    <div class="stat-icon bg-info bg-opacity-10 text-info rounded-3 p-3 me-3">
-                        <i class="bi bi-clock-history fs-3"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-0 text-muted">Last Updated</h6>
-                        <h3 class="mb-0 fw-bold">@(Model.Count > 0 ? "2 days ago" : "Never")</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Bar -->
-    <div class="action-bar bg-white rounded-3 shadow-sm p-3 mb-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-            <div class="search-box flex-grow-1 me-md-3 w-100">
-                <i class="bi bi-search"></i>
-                <input type="text" class="form-control form-control-lg" placeholder="Search resumes..." id="resumeSearch">
-            </div>
-            <div class="d-flex gap-2 w-100 w-md-auto">
-                <div class="dropdown w-100">
-                    <button class="btn btn-outline-secondary rounded-pill w-100 dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-funnel"></i> Filter
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">All Resumes</a></li>
-                        <li><a class="dropdown-item" href="#">Recently Updated</a></li>
-                        <li><a class="dropdown-item" href="#">Most Complete</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown w-100">
-                    <button class="btn btn-outline-secondary rounded-pill w-100 dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-sort-down"></i> Sort
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Newest First</a></li>
-                        <li><a class="dropdown-item" href="#">Oldest First</a></li>
-                        <li><a class="dropdown-item" href="#">A-Z</a></li>
-                        <li><a class="dropdown-item" href="#">Z-A</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Suggestion -->
-    <div class="ai-suggestion bg-dark text-white p-4 rounded-4 mb-4 position-relative overflow-hidden">
-        <div class="position-absolute top-0 end-0 opacity-25">
-            <i class="bi bi-stars fs-1"></i>
-        </div>
-        <div class="position-relative">
-            <h5 class="mb-2"><i class="bi bi-magic me-2"></i> AI Suggestion</h5>
-            <p class="mb-3">Tailoring your resume to match job descriptions can double your interview chances.</p>
-            <a href="#" class="btn btn-light rounded-pill px-4">
-                Try AI Resume Tailor <i class="bi bi-arrow-right ms-2"></i>
-            </a>
-        </div>
-    </div>
-
-    @if (Model.Count == 0)
-    {
-        <!-- Empty State -->
-        <div class="empty-state text-center bg-white border border-2 border-dashed rounded-4 p-5">
-            <div class="empty-icon bg-light bg-opacity-50 rounded-circle p-4 mb-4 d-inline-block">
-                <i class="bi bi-file-earmark-text fs-1 text-muted"></i>
-            </div>
-            <h4 class="mb-3">No resumes found</h4>
-            <p class="text-muted mb-4">Start building your professional profile by creating your first resume</p>
-            <a href="/Resume/Create" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm">
-                <i class="bi bi-plus-lg me-2"></i> Create Resume
-            </a>
-        </div>
-    }
-    else
-    {
-        <!-- Resume Cards -->
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var resume in Model)
-            {  
-                <div class="col">
-                    <div class="resume-card h-100 bg-white rounded-3 shadow-sm border-0 overflow-hidden position-relative">
-                        <div class="card-top p-4 pb-0">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="template-badge bg-primary text-white px-2 py-1 rounded-1 small">
-                                    @resume.Title
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary rounded-circle" data-bs-toggle="dropdown">
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i> Edit</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-files me-2"></i> Duplicate</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-magic me-2"></i> Tailor for Job</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-action="Preview" asp-route-id="@resume.resumeId"><i class="bi bi-eye me-2"></i> Preview</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i> Download</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item text-danger" asp-action="Delete" asp-route-id="@resume.resumeId" ><i class="bi bi-trash me-2"></i> Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <h4 class="resume-title mb-2">@resume.Title</h4>
-                            <div class="resume-meta text-muted small d-flex flex-wrap gap-3 mb-3">
-                                <span><i class="bi bi-calendar me-1"></i> @(resume.CreatedDate != null ? resume.CreatedDate.ToString() : "")</span>
-
-                                <span><i class="bi bi-clock me-1"></i> @(resume.ModifiedDate != null ? resume.ModifiedDate.ToString() : "")</span>
-
-                            </div>
-                        </div>
-
-                        <div class="card-body p-4 pt-0">
-                            <div class="resume-preview bg-light rounded-2 overflow-hidden mb-3" style="height: 120px;">
-                                <!-- Mini preview of the resume -->
-                                <div class="d-flex h-100">
-                                    <div class="bg-white border-end" style="width: 30%;"></div>
-                                    <div class="flex-grow-1 p-2">
-                                        <div class="bg-white mb-2" style="height: 15px; width: 80%;"></div>
-                                        <div class="bg-white mb-1" style="height: 10px; width: 60%;"></div>
-                                        <div class="bg-white mb-1" style="height: 10px; width: 70%;"></div>
-                                        <div class="bg-white mb-1" style="height: 10px; width: 50%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="progress mb-2" style="height: 6px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: @resume.CompletionPercentage%"></div>
-                            </div>
-                            <div class="d-flex justify-content-between small mb-3">
-                                <span class="text-muted">Completion</span>
-                                <span class="fw-bold">@resume.CompletionPercentage%</span>
-                            </div>
-                        </div>
-
-                        <div class="card-footer bg-white p-4 pt-0">
-                            <div class="d-flex flex-wrap gap-2">
-                                <a href="/Resume/Edit/@resume.resumeId" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1">
-                                    <i class="bi bi-pencil me-1"></i> Edit
-                                </a>
-                                <a href="#" class="btn btn-sm btn-primary rounded-pill flex-grow-1">
-                                    <i class="bi bi-magic me-1"></i> Tailor
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            <!-- Add New Card -->
-            <div class="col">
-                <div class="add-new-card h-100 bg-light bg-opacity-10 border-2 border-dashed rounded-3 d-flex flex-column justify-content-center align-items-center p-5 text-center hover-effect">
-                    <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle mb-3 p-3">
-                        <i class="bi bi-plus-lg fs-4"></i>
-                    </div>
-                    <h5 class="mb-2">Create New Resume</h5>
-                    <p class="text-muted small mb-3">Start from scratch or use a template</p>
-                    <a href="/Resume/Create" class="btn btn-primary rounded-pill px-4">
-                        <i class="bi bi-plus-lg me-1"></i> New Resume
-                    </a>
-                </div>
-            </div>
-        </div>
-    }
-</div>
-
 <style>
-    .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Base Styles */
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2c3e50;
     }
 
-    body {
-        padding-top: 56px; 
+    .container {
+        max-width: 1400px;
     }
+
+    /* Header Section */
+    .hero-section {
+        background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-bg-pattern {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40%;
+        height: 100%;
+        background-image: radial-gradient(rgba(255,255,255,0.1) 2px, transparent 2px);
+        background-size: 20px 20px;
+        opacity: 0.5;
+    }
+
+    /* Stats Cards */
     .stat-card {
-        transition: transform 0.2s;
+        transition: all 0.3s ease;
+        border-left: 4px solid;
+        border-radius: 8px;
     }
 
         .stat-card:hover {
             transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-    .search-box {
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Portfolio Cards */
+    .portfolio-card {
+        transition: all 0.3s ease;
+        border: none;
+        overflow: hidden;
         position: relative;
     }
 
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-
-        .search-box input {
-            padding-left: 45px;
-            border-radius: 50px;
-            border: 1px solid #dee2e6;
-        }
-
-    .ai-suggestion {
-        background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
-    }
-
-    .resume-card {
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0,0,0,0.1);
-    }
-
-        .resume-card:hover {
+        .portfolio-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
-    .add-new-card {
+    .portfolio-preview {
+        height: 150px;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .portfolio-preview-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+    }
+
+    .portfolio-title {
+        font-weight: 600;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .portfolio-meta {
+        font-size: 0.85rem;
+    }
+
+    /* Badges */
+    .badge-sm {
+        font-size: 0.65rem;
+        font-weight: 500;
+        padding: 0.25em 0.6em;
+    }
+
+    /* Empty State */
+    .empty-state {
+        border: 2px dashed #dee2e6;
         transition: all 0.3s ease;
     }
 
-    .hover-effect:hover {
-        background-color: rgba(0,0,0,0.02) !important;
-        border-color: #adb5bd !important;
-    }
+        .empty-state:hover {
+            border-color: #3498db;
+            background-color: rgba(52, 152, 219, 0.05);
+        }
 
     .empty-icon {
         width: 80px;
@@ -281,21 +134,233 @@
         justify-content: center;
     }
 
-    .template-badge {
-        font-size: 0.65rem;
-        letter-spacing: 0.5px;
+    /* Add New Card */
+    .add-new-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .add-new-card:hover {
+            background-color: rgba(52, 152, 219, 0.05) !important;
+            border-color: #3498db !important;
+        }
+
+    .add-new-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Responsive Adjustments */
+    media (max-width: 768px) {
+        .hero-section
+
+    {
+        text-align: center;
+    }
+
+    .hero-bg-pattern {
+        display: none;
+    }
+
+    .stat-card {
+        margin-bottom: 15px;
+    }
+
+    .portfolio-card {
+        margin-bottom: 20px;
+    }
+
+    }
+
+    /* Animation */
+    keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .portfolio-card, .add-new-card {
+        animation: fadeIn 0.4s ease-out;
     }
 </style>
 
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="hero-section text-white p-4 p-md-5 mb-5">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold mb-3">Welcome back, @userName!</h1>
+                    <p class="lead mb-4">You have <strong>@Model.Count()</strong> Resume@(Model.Count() != 1 ? "s" : "") showcasing your amazing work</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a asp-action="Create" asp-controller="Resume" class="btn btn-light btn-lg rounded-pill px-4 shadow-sm">
+                            <i class="bi bi-plus-circle me-2"></i> Create New
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-5 g-3">
+        <div class="col-md-4">
+            <div class="stat-card bg-white p-4 h-100" style="border-left-color: #3498db;">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon me-3" style="background-color: rgba(52, 152, 219, 0.1); color: #3498db;">
+                        <i class="bi bi-briefcase fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-muted">Total Portfolios</h6>
+                        <h3 class="mb-0 fw-bold">@Model.Count()</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stat-card bg-white p-4 h-100" style="border-left-color: #9b59b6;">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon me-3" style="background-color: rgba(155, 89, 182, 0.1); color: #9b59b6;">
+                        <i class="bi bi-clock-history fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-muted">Last Updated</h6>
+                        <h3 class="mb-0 fw-bold">@lastUpdated</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <!-- Empty State -->
+        <div class="empty-state text-center bg-white rounded-4 p-5 mb-5">
+            <div class="empty-icon bg-light bg-opacity-50 rounded-circle p-4 mb-4 d-inline-block">
+                <i class="bi bi-briefcase fs-1 text-muted"></i>
+            </div>
+            <h3 class="mb-3">No portfolios found</h3>
+            <p class="text-muted mb-4">Showcase your skills and projects by creating your first portfolio</p>
+            <a href="/Portfolio/Create" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm">
+                <i class="bi bi-plus-lg me-2"></i> Create Portfolio
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Portfolio Grid -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var r in Model)
+            {
+                <div class="col">
+                    <div class="portfolio-card bg-white rounded-3 shadow-sm h-100 d-flex flex-column">
+                        <!-- Portfolio Header -->
+                        <div class="p-4 pb-0">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="badge bg-primary bg-opacity-10 text-primary badge-sm">
+                                    @(r.Title ?? "Untitled")
+                                </span>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary rounded-circle" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" asp-action="Edit" asp-controller="Resume" asp-route-Id="@r.resumeId"><i class="bi bi-pencil me-2"></i> Edit</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-files me-2"></i> Duplicate</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-action="Preview" asp-controller="Resume" asp-route-Id="@r.resumeId" ><i class="bi bi-eye me-2"></i> Preview</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i> Export</a></li>
+                                        
+                                        <li><a class="dropdown-item text-danger" asp-action="Delete" asp-controller="Resume" asp-route-Id="@r.resumeId"><i class="bi bi-trash me-2"></i> Delete</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <h4 class="portfolio-title mb-2">@(r.Title ?? "My Portfolio")</h4>
+                            <div class="portfolio-meta text-muted small d-flex flex-wrap gap-3 mb-3">
+                                <span><i class="bi bi-person me-1"></i> @r.FirstName @r.LastName</span>
+                                <span><i class="bi bi-collection me-1"></i> @(r.Educations?.Count ?? 0) projects</span>
+                            </div>
+                        </div>
+
+                      
+                        <div class="p-4">
+                        
+                        
+
+                            <!-- Actions -->
+                            <div class="d-flex gap-3">
+                                <a asp-action="Edit" asp-controller="Resume" asp-route-Id="@r.resumeId" class="btn btn-sm btn-outline-primary flex-grow-1">
+                                    <i class="bi bi-pencil me-1"></i> Edit
+                                </a>
+                                <a asp-action="Preview" asp-controller="Resume" asp-route-Id="@r.resumeId" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-eye me-1"></i> View
+                                </a>
+                                <a asp-action="Delete" asp-controller="Resume" asp-route-Id="@r.resumeId" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-trash me-2"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Add New Portfolio Card -->
+            <div class="col">
+                <a href="/Portfolio/Create" class="text-decoration-none">
+                    <div class="add-new-card h-100 bg-light bg-opacity-10 border-2 border-dashed rounded-3 d-flex flex-column justify-content-center align-items-center p-5 text-center">
+                        <div class="add-new-icon bg-primary bg-opacity-10 text-primary rounded-circle mb-3">
+                            <i class="bi bi-plus-lg fs-3"></i>
+                        </div>
+                        <h5 class="mb-2">Create New Portfolio</h5>
+                        <p class="text-muted small mb-0">Showcase your best work professionally</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
 @section Scripts {
     <script>
-        // Simple search functionality
-        document.getElementById('resumeSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            document.querySelectorAll('.resume-card').forEach(card => {
-                const title = card.querySelector('.resume-title').textContent.toLowerCase();
-                card.style.display = title.includes(searchTerm) ? 'block' : 'none';
-            });
+        // Initialize tooltips
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
+        // Initialize dropdowns
+        $(function () {
+            $('.dropdown-toggle').dropdown();
+        });
+
+        // Portfolio search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('portfolioSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    document.querySelectorAll('.portfolio-card').forEach(card => {
+                        const title = card.querySelector('.portfolio-title').textContent.toLowerCase();
+                        card.style.display = title.includes(searchTerm) ? 'block' : 'none';
+                    });
+                });
+            }
         });
     </script>
 }

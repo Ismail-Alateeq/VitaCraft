@@ -37,55 +37,49 @@ namespace VitaCraft.Controllers
         }
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int Id)
         {
-            var resume = await _resumeRepository.GetByIdAsync(id);
+            var resume = await _resumeRepository.GetByIdAsync(Id);
 
             if (resume == null)
             {
                 return NotFound();
             }
 
-            // Verify the portfolio belongs to the current user
-            if (resume.EndUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
-            {
-                return Forbid();
-            }
-
+          
             var resumeJsonDto = MapToResumeJsonDto(resume);
 
 
             return View(resumeJsonDto);
         }
 
-        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ResumeJsonDto model)
         {
             if (!ModelState.IsValid)
             {
-                // Re-render the view with validation errors and keep current step
+                
                 return View("Edit", model);
             }
             var resume = MapToResumeEntity(model, User.FindFirstValue(ClaimTypes.NameIdentifier));
             resume.resumeId = model.resumeId;
             await _resumeRepository.UpdateAsync(resume);
-            // After a successful edit, redirect to Index
+            
             return RedirectToAction("Index");
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int Id)
         {
             try
             {
-                var resume = await _resumeRepository.GetByIdAsync(id);
+                var resume = await _resumeRepository.GetByIdAsync(Id);
 
                 if (resume == null)
                 {
-                    TempData["ErrorMessage"] = "السيرة الذاتية غير موجودة";
+                    TempData["ErrorMessage"] = " ";
                     return RedirectToAction("Index");
                 }
 
@@ -102,17 +96,17 @@ namespace VitaCraft.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "An error occurred while trying to delete the resume.";
+                TempData["ErrorMessage"] = $"An error occurred while trying to delete the resume.{ex}";
                 return RedirectToAction("Index");
             }
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Preview(int id)
+        public async Task<IActionResult> Preview(int Id)
         {
             // Get the resume by ID
-            var resume = await _resumeRepository.GetByIdAsync(id);
+            var resume = await _resumeRepository.GetByIdAsync(Id);
 
             if (resume == null)
             {
@@ -186,13 +180,14 @@ namespace VitaCraft.Controllers
                 email = dto.Email,
                 phoneNumber = dto.PhoneNumber,
                 title = dto.Title,
-                bio = dto.Summary ?? dto.Summary, // use whichever is populated
+                bio = dto.Summary ?? dto.Summary,
                 gitHub = dto.GitHubLink,
                 linkedIn = dto.LinkedinLink,
-                EndUserId = userId, // assuming you use ASP.NET Identity
+                EndUserId = userId, 
+                
 
                 // Date/time fields:
-                createdDate = DateTime.UtcNow.ToString(),
+                createdDate = dto.CreatedDate,
                 modifiedDate = DateTime.UtcNow.ToShortDateString(),
 
                 // Collections, mapped (you may need to adjust for navigation properties):

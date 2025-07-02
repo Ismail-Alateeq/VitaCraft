@@ -12,6 +12,7 @@
         public string PhoneNumber { get; set; } = "";
         public string? Address { get; set; }
         public string Summery { get; set; } = "";
+        public IFormFile PersonalImage { get; set; }
         public string? ImageBase64 { get; set; }
         public string? ImageFileName { get; set; }
         public string? ImageContentType { get; set; }

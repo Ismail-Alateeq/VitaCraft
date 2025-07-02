@@ -39,6 +39,7 @@ namespace VitaCraft
             builder.Services.AddSingleton<IPortFolioOpenAiService, PortFolioOpenAiService>();
             builder.Services.AddScoped<IResumeRepository, ResumeRepository>();
             builder.Services.AddScoped<IPortFolioRepository, PortFolioRepository>();
+            builder.Services.AddTransient<IEmailService, EmailService>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

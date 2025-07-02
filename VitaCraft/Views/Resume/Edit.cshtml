@@ -12,11 +12,11 @@
         <p>Update your details to maintain a professional resume</p>
     </div>
 
-    <form asp-action="Edit" method="post" class="animated-form">
+    <form asp-action="Edit" asp-controller="Resume" method="post" enctype="multipart/form-data" class="animated-form">
         <input type="hidden" asp-for="resumeId" />
         <input type="hidden" asp-for="EndUserId" />
         <input type="hidden" asp-for="CreatedDate" />
-
+        <input asp-for="Title" hidden />
         <!-- Personal Information -->
         <fieldset class="form-section">
             <legend>Personal Information</legend>
@@ -120,12 +120,12 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label asp-for="Experiences[i].Title" class="form-label">Job Title</label>
-                                    <input asp-for="Experiences[i].Title" class="form-control" required />
+                                    <input asp-for="Experiences[i].Title" class="form-control" />
                                     <span asp-validation-for="Experiences[i].Title" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Experiences[i].Company" class="form-label">Company</label>
-                                    <input asp-for="Experiences[i].Company" class="form-control" required />
+                                    <input asp-for="Experiences[i].Company" class="form-control"  />
                                     <span asp-validation-for="Experiences[i].Company" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">

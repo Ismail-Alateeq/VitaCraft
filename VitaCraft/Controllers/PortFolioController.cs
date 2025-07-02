@@ -10,6 +10,9 @@ using VitaCraft.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Build.Evaluation;
+using VitaCraft.Services;
+using System.Net;
+using System.Net.Mail;
 
 namespace VitaCraft.Controllers
 {
@@ -17,11 +20,13 @@ namespace VitaCraft.Controllers
     {
         private readonly IPortFolioRepository _portfolioRepository;
         private readonly IPortFolioOpenAiService _service;
+        private readonly IEmailService _emailService;
 
-        public PortFolioController(IPortFolioRepository portfolioRepository, IPortFolioOpenAiService service, ApplicationDbContext context)
+        public PortFolioController(IPortFolioRepository portfolioRepository, IPortFolioOpenAiService service, ApplicationDbContext context, IEmailService emailService)
         {
             _portfolioRepository = portfolioRepository;
             _service = service;
+            _emailService = emailService;
         }
 
         [Authorize]
@@ -45,7 +50,7 @@ namespace VitaCraft.Controllers
             return View(new PortFolioDTO());
         }
 
-        [Authorize]
+  
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PortFolioDTO model)
@@ -111,7 +116,7 @@ namespace VitaCraft.Controllers
             }
         }
 
-        [Authorize]
+    
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -133,21 +138,58 @@ namespace VitaCraft.Controllers
             return View(portfolioDto);
         }
 
-        [Authorize]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(PortfolioJsonDto model)
+        public async Task<IActionResult> SavePortfolio(PortfolioJsonDto model)
         {
             if (!ModelState.IsValid)
             {
-                // Re-render the view with validation errors and keep current step
-                return View("EditPortfolio", model);
+                return View("Edit", model);
             }
-            var portfolio1 = MapToPortfolioEntity(model, User.FindFirstValue(ClaimTypes.NameIdentifier));
-            portfolio1.portFolioId = model.portFolioId;
-            await _portfolioRepository.UpdateAsync(portfolio1);
-            // After a successful edit, redirect to Index
-            return RedirectToAction("Index");
+
+            try
+            {
+                // Handle file uploads
+                if (model.PersonalImage != null && model.PersonalImage.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await model.PersonalImage.CopyToAsync(memoryStream);
+                        model.ImageBase64 = Convert.ToBase64String(memoryStream.ToArray());
+                        model.ImageFileName = model.PersonalImage.FileName;
+                        model.ImageContentType = model.PersonalImage.ContentType;
+                    }
+                }
+
+                // Handle project images
+                if (model.Projects != null)
+                {
+                    foreach (var project in model.Projects)
+                    {
+                        if (project.ProjectImages != null && project.ProjectImages.Length > 0)
+                        {
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await project.ProjectImages.CopyToAsync(memoryStream);
+                                project.ImageBase64 = Convert.ToBase64String(memoryStream.ToArray());
+                                project.ImageFileName = project.ProjectImages.FileName;
+                                project.ImageContentType = project.ProjectImages.ContentType;
+                            }
+                        }
+                    }
+                }
+
+                var p = MapToPortfolioEntity(model,User.FindFirstValue(ClaimTypes.NameIdentifier));
+                   await _portfolioRepository.UpdateAsync(p);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while saving the portfolio.");
+                return View("Edit", model);
+            }
         }
 
         [Authorize]
@@ -176,11 +218,11 @@ namespace VitaCraft.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int Id)
         {
             try
             {
-                var portFolio = await _portfolioRepository.GetByIdAsync(id);
+                var portFolio = await _portfolioRepository.GetByIdAsync(Id);
 
                 if (portFolio == null)
                 {
@@ -405,6 +447,40 @@ namespace VitaCraft.Controllers
                     SkillType = s.skillType,
                 }).ToList() ?? new List<SkillItem>(),
             };
+
+        }
+     
+        
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendContactMessage(string Name , string Email , string Text , string Massage,string PortfolioEmail)
+        {
+
+            //return RedirectToAction("index");
+            try
+            {
+                var emailBody = $@"
+            <h3>New Contact Message from Portfolio</h3>
+            <p><strong>Name:</strong> {Name}</p>
+            <p><strong>Email:</strong> {Email}</p>
+            <p><strong>Text:</strong> {Text}</p>
+            <p><strong>Message:</strong></p>
+            <p>
+                {Massage}</p>";
+
+                await _emailService.SendEmailAsync(
+                    $"{PortfolioEmail}", // Where you want to receive messages
+                    $"PortFolio Contact: {Text}",
+                    emailBody);
+
+                TempData["MessageSent"] = true;
+                return RedirectToAction("Index"); // Or wherever you want to redirect
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                TempData["MessageError"] = "There was an error sending your message. Please try again later.";
+                return View("PortFolioTemplate");
+            }
         }
     }
 }
